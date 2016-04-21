@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.3)
 project(AnotherC__)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
 set(Magic1 ifOperatorReload.cpp)
 set(Magic2 magic1.cpp)
@@ -14,4 +14,5 @@ add_executable(Magic2 ${Magic2})
 add_executable(Magic3 ${Magic3})
 add_executable(Magic4 ${Magic4})
 add_executable(Magic5 ${Magic5})
+add_executable(Lisp WriteCppLikeLisp.cpp)
 #add_executable(Magic6 ${Magic6})
