@@ -14,7 +14,7 @@ namespace meta_programming {
     template<class T, class R>
     struct eq {
         static constexpr bool value = false;
-    };;
+    };
 
     template<class T>
     struct eq<T, T> {
@@ -159,7 +159,8 @@ namespace meta_programming {
 
 
     template<template<typename> class VFunc, class TypeList, size_t... Indices>
-    list<typename VFunc<typename get<Indices, TypeList>::result>::result...> help_explode2(std::index_sequence<Indices...>) {
+    list<typename VFunc<typename get<Indices, TypeList>::result>::result...> help_explode2(
+            std::index_sequence<Indices...>) {
         list<typename VFunc<typename get<Indices, TypeList>::result>::result...> nonsense;
         return nonsense;
     };
