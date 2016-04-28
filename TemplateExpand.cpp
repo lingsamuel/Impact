@@ -4,6 +4,9 @@
 template<typename Left, typename Right>
 class ConcatExpr;
 
+class nil {
+};
+
 template<char ch>
 class MatchExpr;
 
@@ -25,7 +28,16 @@ public:
     using expr = RegExpr;
 };
 
-class nil {
+template<typename RegExpr, typename ...Remain>
+class ZeroOrMoreExpr {
+public:
+    using expr = RegExpr;
+};
+
+template<typename RegExpr, typename ...Remain>
+class RepeatExpr {
+public:
+    using expr = RegExpr;
 };
 
 template<typename First, typename ...Rest>
@@ -77,6 +89,7 @@ public:
 };
 
 
+//
 //template<char ...charlist>
 //class MatchImplement<AlterExpr<CharList<charlist...>>> {
 //public:
@@ -84,17 +97,59 @@ public:
 //
 //    template<typename Lambda>
 //    static bool Apply(const char *target, Lambda function) {
-//        return CharList<charlist ...>::Apply(target,
-//                                             [function](const char *rest) -> bool {
-//                                                 return *rest == '\0';
-//                                             })
-//               || MatchImplement<AlterExpr<typename CharList<charlist ...>::rest>>::Apply(target,
-//                                                                                          [function](
-//                                                                                                  const char *rest) -> bool {
-//                                                                                              return *rest == '\0';
-//                                                                                          });
+//        return MatchImplement<AlterExpr<CharList<CharList<charlist ...>::value>>>::Apply(target, function) ||
+//               MatchImplement<AlterExpr<typename CharList<charlist ...>::rest>>::Apply(target, function);
 //    }
 //};
+//
+//template<char ch>
+//class MatchImplement<AlterExpr<CharList<ch>>> {
+//public:
+//    using regexRest = typename CharList<ch>::rest;
+//
+//    template<typename Lambda>
+//    static bool Apply(const char *target, Lambda function) {
+//        return *target && *target == ch && function(target + 1);
+//    }
+//};
+//
+//template<typename First>
+//class MatchImplement<AlterExpr<First>> {
+//public:
+//    using rest = MatchImplement<nil>;
+//
+//    template<typename Lambda>
+//    static bool Apply(const char *target, Lambda function) {
+//        // 这个傻逼的设计是因为CharList是变长的，因此，递归到最后有一个nil
+//        // 但是这个nil是不能统一处理的，例如AccruatePattern和AlternativePattern就是不一样的
+//        // 一个必须返回true (&&)，一个必须返回false (||)，来保证结果不被影响
+//        // 仅用于剥开无意义嵌套，事实上来说应该全部的有意义嵌套都会被特化
+//        return MatchImplement<First>::Apply(target, function);
+//    }
+//};
+//
+//template<typename First, typename ...Remain>
+//class MatchImplement<AlterExpr<First, Remain...>> {
+//public:
+//    using rest = MatchImplement<Remain...>;
+//
+//    template<typename Lambda>
+//    static bool Apply(const char *target, Lambda function) {
+//        return MatchImplement<AlterExpr<First>>::Apply(target, function) ||
+//               MatchImplement<AlterExpr<Remain...>>::Apply(target, function);
+//    }
+//};
+//
+//template<>
+//class MatchImplement<AlterExpr<nil>> {
+//public:
+//    template<typename Lambda>
+//    static bool Apply(const char *target, Lambda function) {
+//        return false;
+//    }
+//};
+
+
 
 template<char ...charlist>
 class MatchImplement<AlterExpr<CharList<charlist...>>> {
@@ -225,6 +280,10 @@ public:
 };
 
 
+template<typename RegExpr, typename ...Remain>
+using OptionalExpr = class AlterExpr<AlterExpr<RegExpr, Remain...>, AccurExpr<nil>>;
+
+
 template<typename RegexExpr>
 bool RegexMatch(const char *target) {
     return (MatchImplement<RegexExpr>::Apply(target,
@@ -298,10 +357,23 @@ void alterAccurTest() {
         ? "ERR (This Test Should be False)" : "OK") << endl;
 }
 
+void optTest(){
+    constexpr const char *space = "                       ";
+    cout << "Optional Pattern Test: "
+    << (RegexMatch<OptionalExpr<CharList<'b', 'b'>>>("") ? "OK" : "ERR") << endl;
+    cout << space
+    << (RegexMatch<OptionalExpr<CharList<'b', 'b'>>>("bb") ? "OK" : "ERR") << endl;
+    cout << space
+    << (RegexMatch<AccurExpr<OptionalExpr<CharList<'b', 'b'>>, CharList<'g'>>>("g") ? "OK" : "ERR") << endl;
+    cout << space
+    << (RegexMatch<AccurExpr<OptionalExpr<CharList<'b', 'b'>>, CharList<'g'>>>("bbg") ? "OK" : "ERR") << endl;
+}
+
 int main() {
 //    listTest();
     accurTest();
     alterTest();
     alterAccurTest();
+    optTest();
     return 0;
 }
