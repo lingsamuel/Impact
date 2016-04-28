@@ -8,14 +8,16 @@ A naive C++ test code.
 
 包括：判断运算符是否重载
 
-大数类
+大数类 Axure
 
-左右值
+左右值 MichaelSuen-thePointer
 
-各种构造
+各种构造 MichaelSuen-thePointer
 
-数学意义的连续比较操作
+数学意义的连续比较操作 Axure
 
-模板实现的类Lisp
+模板实现的类Lisp Axure
 
-作者：@Axure 学长 @MichaelSuen-thePointer 学长
+判断是否重载某个操作符 Axure
+
+编译期正则表达式 lingsameul
