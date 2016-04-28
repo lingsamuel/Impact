@@ -112,7 +112,7 @@ int main() {
             "aaaaab")));
     assert((RegexMatch<ConcatExpr<RepeatExpr<MatchExpr<'a'>>, MatchExpr<'b'>>>("b")));
     assert((RegexSearch<ConcatExpr<RepeatExpr<MatchExpr<'a'>>, MatchExpr<'b'>>>(
-            "aaaaabb")));
+            "aaaababb")));
     assert((RegexMatch<OptionalExpr<MatchExpr<'a'>>>("a")));
     assert((RegexMatch<OptionalExpr<MatchExpr<'a'>>>("")));
     assert((RegexMatch<OptionalExpr<ConcatExpr<MatchExpr<'a'>, MatchExpr<'b'>>>>(
