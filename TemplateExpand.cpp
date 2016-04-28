@@ -353,7 +353,7 @@ void repeatAtLeastOnceTest() {
     << (RegexMatch<RepeatOnceExpr<CharList<'a'>>>("") ? "ERR (This Test Should be False)" : "OK") << endl;
 }
 
-void searchTest(){
+void searchTest() {
     constexpr const char *space = "                     ";
     cout << "Search Pattern Test: "
     << (RegexSearch<AccurExpr<
@@ -363,29 +363,87 @@ void searchTest(){
             RepeatExpr<CharList<'a'>>, CharList<'b'>>>("fadskg") ? "ERR (This Test Should be False)" : "OK") << endl;
 }
 
-void flexTest(){
-    assert((RegexMatch<
+void flexTest() {
+    constexpr const char *space = "                   ";
+    cout << "Flex Pattern Test: "
+    << (RegexMatch<
             AccurExpr<
-                    CharList<'a'>, AccurExpr<CharList<'b'> ,
-                            AccurExpr< CharList<'a','b'> >
-                    > > >("abab") ) );
-    assert((RegexMatch<AlterExpr<CharList<'a','b'>>>("a")));
-    assert((RegexMatch<AlterExpr<CharList<'a','b'>>>("b")));
-    assert((RegexMatch<RepeatExpr<CharList<'a'>>>("aaaaa")));
-    assert((RegexMatch<AccurExpr<RepeatExpr<CharList<'a'>>, CharList<'b'>>>(
-            "aaaaab")));
-    assert((RegexMatch<AccurExpr<RepeatExpr<CharList<'a'>>, CharList<'b'>>>("b")));
-    assert((RegexSearch<AccurExpr<RepeatExpr<CharList<'a'>>, CharList<'b'>>>(
-            "aaabaabb")));
-    assert((RegexMatch<OptionalExpr<CharList<'a'>>>("a")));
-    assert((RegexMatch<OptionalExpr<CharList<'a'>>>("")));
-    assert((RegexMatch<OptionalExpr<AccurExpr<CharList<'a','b'>>>>(
-            "ab")));
-    assert((RegexMatch<OptionalExpr<AccurExpr<CharList<'a','b'>>>>(
-            "")));
-    assert((!RegexMatch<RepeatExpr<CharList<'a'>>>("aaaaab")));
-    assert((RegexMatch<RepeatExpr<OptionalExpr<CharList<'a'>>>>("")));
+                    CharList<'a'>, AccurExpr<CharList<'b'>,
+                            AccurExpr<CharList<'a', 'b'> >
+                    > > >("abab") ? "OK" : "ERR") << endl;
+    cout << space
+    << (RegexMatch<AlterExpr<CharList<'a', 'b'>>>("a") ? "OK" : "ERR") << endl;
+    cout << space
+    << (RegexMatch<AlterExpr<CharList<'a', 'b'>>>("b") ? "OK" : "ERR") << endl;
+    cout << space
+    << (RegexMatch<RepeatExpr<CharList<'a'>>>("aaaaa") ? "OK" : "ERR") << endl;
+    cout << space
+    << (RegexMatch<AccurExpr<RepeatExpr<CharList<'a'>>, CharList<'b'>>>("aaaaab") ? "OK" : "ERR") << endl;
+    cout << space
+    << (RegexMatch<AccurExpr<RepeatExpr<CharList<'a'>>, CharList<'b'>>>("b") ? "OK" : "ERR") << endl;
+    cout << space
+    << (RegexSearch<AccurExpr<RepeatExpr<CharList<'a'>>, CharList<'b'>>>("aaabaabb") ? "OK" : "ERR") << endl;
+    cout << space
+    << (RegexMatch<OptionalExpr<CharList<'a'>>>("a") ? "OK" : "ERR") << endl;
+    cout << space
+    << (RegexMatch<OptionalExpr<CharList<'a'>>>("") ? "OK" : "ERR") << endl;
+    cout << space
+    << (RegexMatch<OptionalExpr<AccurExpr<CharList<'a', 'b'>>>>("ab") ? "OK" : "ERR") << endl;
+    cout << space
+    << (RegexMatch<OptionalExpr<AccurExpr<CharList<'a', 'b'>>>>("") ? "OK" : "ERR") << endl;
+    cout << space
+    << (!RegexMatch<RepeatExpr<CharList<'a'>>>("aaaaab") ? "OK" : "ERR") << endl;
+    cout << space
+    << (RegexMatch<RepeatExpr<OptionalExpr<CharList<'a'>>>>("") ? "OK" : "ERR") << endl;
 
+}
+
+void BigNestedTest() {
+    constexpr const char *space = "                   ";
+    cout << "Flex Pattern Test: "
+    << (RegexMatch<
+            AccurExpr<
+                    CharList<'a', 'b', 'c'>, RepeatExpr<CharList<'d'>>,
+                    RepeatExpr<
+                            CharList<'a', 'b'>
+                    >,
+                    CharList<'c'>,
+                    AccurExpr<CharList<'d'>, OptionalExpr<CharList<'s', 'b'> >, RepeatExpr<CharList<'a'>>>,
+                    RepeatOnceExpr<CharList<'g'>>> >("abcdddddababababcdg") ? "OK" : "ERR") << endl;
+
+    cout << space << (RegexSearch<
+            AccurExpr<
+                    CharList<'a', 'b', 'c'>, RepeatExpr<CharList<'d'>>,
+                    RepeatExpr<
+                            CharList<'a', 'b'>
+                    >,
+                    CharList<'c'>,
+                    AccurExpr<CharList<'d'>, OptionalExpr<CharList<'s', 'b'> >, RepeatExpr<CharList<'a'>>>,
+                    RepeatOnceExpr<CharList<'g'>>> >("dfhgdfhdfhdgggggabcdddddababababcdghhhhh") ? "OK" : "ERR") << endl;
+
+    cout << space
+    << (RegexSearch<
+            AccurExpr<
+                    CharList<'a', 'b', 'c'>, RepeatExpr<CharList<'d'>>,
+                    RepeatExpr<
+                            CharList<'a', 'b'>
+                    >,
+                    CharList<'c'>,
+                    AccurExpr<CharList<'d'>, OptionalExpr<CharList<'s', 'b'> >, RepeatExpr<CharList<'a'>>>,
+                    RepeatOnceExpr<CharList<'g'>>> >("aaaaaaaabcdddddababababcdghhhhh") ? "OK" : "ERR") << endl;
+
+    cout << space
+    << (RegexSearch<
+            AccurExpr<
+                    RepeatExpr<CharList<'a'>>,
+                    CharList<'a'> > >("aaaaa") ? "OK" : "ERR") << endl;
+
+
+    cout << space
+    << (RegexSearch<
+            AccurExpr<
+                    RepeatExpr<CharList<'a'>>,
+                    CharList<'a'> > >("a") ? "OK" : "ERR") << endl;
 }
 
 int main() {
@@ -398,5 +456,6 @@ int main() {
     repeatAtLeastOnceTest();
     searchTest();
     flexTest();
+    BigNestedTest();
     return 0;
 }
