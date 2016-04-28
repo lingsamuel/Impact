@@ -1,10 +1,10 @@
-# CPPLearningAndMagic
+# CPP Template
 
-A naive C++ test code.
+A naive C++ template collection.
 
 我决定使用中文
 
-## C++ 的黑魔法们
+## C++ 模板
 
 包括：判断运算符是否重载
 
