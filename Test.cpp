@@ -1,11 +1,11 @@
 #include <iostream>
+#include <string>
 
 using namespace std;
+using namespace std::string_literals;
 
 int main() {
-    bool a = false;
-    cout <<
-    a(1 + 2);
+
 
 
 }
