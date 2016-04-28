@@ -6,6 +6,7 @@ using namespace std::string_literals;
 
 int main() {
 
+    bool(1);
 
 
 }
