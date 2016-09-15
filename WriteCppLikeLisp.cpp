@@ -198,7 +198,7 @@ namespace regexp {
     };
 
     template<class Parser>
-    struct parser_base_recur: virtual public parser_base {
+    struct parser_base_recur : virtual public parser_base {
         static result_t transform_list(result_t result_list) {
             result_t transformed_list = {};
             std::for_each(result_list.begin(),
@@ -227,8 +227,9 @@ namespace regexp {
     };
 
     template<char content>
-    struct char_parser: public parser_base_recur<char_parser<content>> {
+    struct char_parser : public parser_base_recur<char_parser<content>> {
         static constexpr char value = content;
+
         static result_t parse(std::string string) {
             assert(string.length() >= 1);
             std::cout << "char parser for std::string" << '\n';
@@ -248,7 +249,7 @@ namespace regexp {
     template<class Parser, size_t times>
     struct repeated_parser {
     private:
-        struct result_parser: virtual public parser_base_recur<repeated_parser<Parser, times>> {
+        struct result_parser : virtual public parser_base_recur<repeated_parser<Parser, times>> {
             static result_t parse(std::string string) {
                 static_assert(times != 0, "The repeated times must be positive!");
                 result_t result = {std::make_tuple("", string)};
@@ -264,6 +265,7 @@ namespace regexp {
                 return result;
             }
         };
+
     public:
         static constexpr int value = times;
         using result = result_parser;
@@ -272,13 +274,15 @@ namespace regexp {
     template<class ParserList>
     struct concated_parser {
     private:
-        struct result_parser: public parser_base_recur<result_parser> {
+        struct result_parser : public parser_base_recur<result_parser> {
             static result_t parse(std::string string) {
-                static_assert(ParserList::length >= 1, "The list of parsers to concat must contain at least one element!");
+                static_assert(ParserList::length >= 1,
+                              "The list of parsers to concat must contain at least one element!");
                 result_t first_result = ParserList::first::parse(string);
                 return concated_parser<typename ParserList::rest>::result::transform_list(first_result);
             }
         };
+
     public:
         using result = result_parser;
     };
@@ -286,12 +290,13 @@ namespace regexp {
     template<class T>
     struct concated_parser<list<T, nil>> {
     private:
-        struct result_parser: public parser_base_recur<result_parser> {
+        struct result_parser : public parser_base_recur<result_parser> {
             static result_t parse(std::string string) {
                 result_t first_result = T::parse(string);
                 return first_result;
             }
         };
+
     public:
         using result = struct result_parser;
     };
@@ -386,7 +391,8 @@ void do_tests() {
     cout << "The length of the list is " << brace<int, double>::result::length << '\n';
 
     cout << "First of (int, double) is int: " << eq<get<0, brace<int, double>::result>::result, int>::value << '\n';
-    cout << "First of (int, double) is double: " << eq<get<0, brace<int, double>::result>::result, double>::value << '\n';
+    cout << "First of (int, double) is double: " << eq<get<0, brace<int, double>::result>::result, double>::value <<
+    '\n';
     cout << "Second of (int, double) is int: " << eq<get<1, brace<int, double>::result>::result, int>::value << '\n';
     cout << "Second of (int, double) is double: " << eq<get<1, brace<int, double>::result>::result, double>::value
     << '\n';

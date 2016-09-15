@@ -5,17 +5,17 @@ using namespace std;
 
 class BigNum {
 private:
-    string a;
+    string value;
 public:
-    BigNum( string &str): a(str) {
+    BigNum( string &str): value(str) {
 
     }
 
-    BigNum( string &&str): a(str) {
+    BigNum( string &&str): value(str) {
 
     }
 
-    BigNum( const char* chars): a(chars) {
+    BigNum( const char* chars): value(chars) {
 
     }
 
@@ -31,20 +31,22 @@ BigNum operator"" _l ( const char * lit, size_t size) {
 }
 
 ostream &operator<<(ostream &os, BigNum &a) {
-    return (os << a.a);
+    return (os << a.value);
 }
 
 ostream &operator<<(ostream &os, BigNum &&a) {
-    return (os << a.a);
+    return (os << a.value);
 }
 
 BigNum mul( BigNum &&a, BigNum &&b) {
 
-    return forward<BigNum>(a.a+b.a);
+    return forward<BigNum>(a.value+b.value);
 }
 
 BigNum operator*( BigNum &&a, BigNum &&b) {
-    return forward<BigNum>(a.a+b.a);
+    return forward<BigNum>(a.value+b.value);
+//    return move<BigNum>(a.value+b.value);
+//    return a.value+b.value;
 }
 
 int main();

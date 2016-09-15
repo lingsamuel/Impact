@@ -1,19 +1,7 @@
 #include <type_traits>
 #include <string>
 
-template<typename Left, typename Right>
-class ConcatExpr;
-
 class nil {
-};
-
-template<char ch>
-class MatchExpr;
-
-template<typename RegExpr>
-class MatchImpl {
-public:
-    using expr = RegExpr;
 };
 
 template<typename RegExpr, typename ...Remain>
@@ -69,7 +57,6 @@ public:
 
 template<typename T, typename ...Remain>
 class MatchImplement;
-
 
 template<char ch>
 class MatchImplement<CharList<ch>> {
@@ -142,7 +129,6 @@ public:
     }
 };
 
-
 template<char ...charlist>
 class MatchImplement<AccurExpr<CharList<charlist...>>> {
 public:
@@ -211,7 +197,6 @@ public:
     }
 };
 
-
 template<typename ...Remain>
 class MatchImplement<RepeatExpr<Remain...>> {
 public:
@@ -229,13 +214,11 @@ public:
     }
 };
 
-
 template<typename RegExpr, typename ...Remain>
 using OptionalExpr = class AlterExpr<AlterExpr<RegExpr, Remain...>, AccurExpr<nil>>;
 
 template<typename First, typename ...Remain>
 using RepeatOnceExpr = class AccurExpr<AccurExpr<First, Remain...>, RepeatExpr<First, Remain...> >;
-
 
 template<typename RegexExpr>
 bool RegexMatch(const char *target) {
@@ -253,7 +236,6 @@ bool RegexSearch(const char *target) {
            (*target && RegexSearch<RegexExpr>(target + 1));
 }
 
-#include <cassert>
 #include <iostream>
 
 using namespace std;

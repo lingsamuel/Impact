@@ -5,7 +5,7 @@ A naive C++ template collection.
 我决定使用中文
 
 ## C++ 模板
-判断运算符是否重载Axure
+判断运算符是否重载 Axure
 
 大数类 Axure
 

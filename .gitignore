@@ -91,3 +91,7 @@ fabric.properties
 *.dSYM/
 
 .idea/
+
+TemplateTest.cpp
+references/
+tests/
